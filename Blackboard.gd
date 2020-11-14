@@ -23,7 +23,7 @@ var change = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	print("Soy ready, dibujo la primera linea")
+	#print("Soy ready, dibujo la primera linea")
 	nuevaLinea = Line2D.new()
 	add_child(nuevaLinea)
 	lineas.append(nuevaLinea)
@@ -62,25 +62,23 @@ func _draw():
 #	var color2 = PoolColorArray( [Color(0.0, 0.0, 0.0)] ) # same as above
 #	draw_primitive(point, color2, PoolVector2Array()) # third argument is UV, disregarded here, used to map textur
 #
-	print("Ya paso ready ahora me toca dibujarme")
-	print(indice)
-	lineas[indice].width = 5.0 # Ancho del pincel, default 10
-	lineas[indice].antialiased = true
+	#print("Ya paso ready ahora me toca dibujarme")
+	#print(indice)
+	# Atributos para mejorar el pincelado
+	lineas[indice].antialiased = true # Segun para mejorar la precision
 	lineas[indice].begin_cap_mode = 2 # Hace que sea rodondo el inicio de la linea
 	lineas[indice].end_cap_mode = 2 # Hace que sea rodondo el final de la linea
 	lineas[indice].joint_mode = 2
 	
 	#lineas[indice].default_color = Color(0.0, 0.0, 0.0)
 	lineas[indice].add_point(posicion_touch)
-	print("Puntos: ", lineas[indice].get_point_count() )
+	#print("Puntos: ", lineas[indice].get_point_count() )
 	
 	#$Line2D.add_point(posicion_touch)
 	#print("Puntos:",$Line2D.get_point_count())
 	
 	#void draw_circle ( Vector2 position, float radius, Color color )
-	#lineas[numLineas].add_point(posicion_touch)
 	#Termino de dibujar
-	#crearSoloUnaLinea = true
 	pass
 
 func _process(delta):
@@ -89,24 +87,24 @@ func _process(delta):
 	#print("Flujo programa")
 	if !terminarConteo:
 		count += 1*delta
-		print(count)
+		#print(count)
 	
 	# Cuando el flujo del programa se vuelve contante significa que
 	# ya no hay mas eventos
 	# Si pasaron 1s podemos decir que despego el lapiz del papel
 	# Y es momento de crear otra linea, pero solamente una, y dejamos 
 	# la anterior para que se vea
-	if( count > 0.1 and !exitOneLine):
+	if( count > 0.05 and !exitOneLine):
 		# crear linea
-		print("--------------------------------Despego el lapiz hora de crear otra linea")
+		#print("--------------------------------Despego el lapiz hora de crear otra linea")
 		exitOneLine = true
 		nuevaLinea = Line2D.new()
 		add_child(nuevaLinea)
 		indice += 1
 		lineas.append(nuevaLinea)
 		#lineas[indice] = nuevaLinea ya no sera necesaria
-		print(indice)
-		print(lineas)
+		#print(indice)
+		#print(lineas)
 		# Esa linea que sea creo es la ira dibujada
 		# Ya no necesaria contar, contar nos ayudaba a saber el tiempo 
 		# para crear un nuevo lapiz
@@ -126,9 +124,10 @@ func _input(event):
 	# el evento sera el touch
 	# Lo que tendriamos que hacer es cada vez 
 	if event is InputEventScreenDrag and modoPencil: #or event is InputEventScreenTouch
-		print("mouse button event at ", event.position)
+		#print("mouse button event at ", event.position)
 		posicion_touch = event.position
 		lineas[indice].default_color = colorPencil # cada linea que dibuje sera black
+		lineas[indice].width = 3.0 # Ancho del pincel, default 10
 		update()
 #	else: #esto me ayudo darme cuenta que es llamada solamente,cuando hay un evento
 #		print("solto", numLineas) 
@@ -145,6 +144,7 @@ func _input(event):
 	# La segunda solucion sera dibujar otra pero de diferente color
 		posicion_touch = event.position
 		lineas[indice].default_color = colorBorrow
+		lineas[indice].width = 16.0 # Ancho del pincel, default 10
 		update()
 		pass
 
@@ -165,10 +165,10 @@ func _input(event):
 
 func _on_CheckButton_toggled(button_pressed):
 	if(button_pressed): # true when is on
-		print("Borrow")
+		#print("Borrow")
 		modoPencil = false # significa que esta en modo borrow
 	else:
-		print("Pencil")
+		#print("Pencil")
 		modoPencil = true
 	pass # Replace with function body.
 
@@ -177,13 +177,13 @@ func _on_Button_pressed():
 	# Verifica exiten al menos una linea para escribir
 	# Significa que mas de una linea para eliminar
 	# se necesita al menos una linea para dibujar, por no se puede borrar
-	if indice > 1: 
+	if indice > 0: 
 		# Se quedadn Deleted object en el array
 		lineas[indice].queue_free() #posicion se queda guardada null
 		lineas.remove(indice) # Elimina precisamente ese objeto
 		indice -= 1
-		print(indice)
-		print(lineas)
+		#print(indice)
+		#print(lineas)
 		# Elimina todos los puntos, y ahora es la linea con la cual
 		# va a ser dibuja, dejando intacto los cambios de process
 		lineas[indice].clear_points() 
@@ -200,4 +200,21 @@ func _on_ChangeColorButton_pressed():
 		colorPencil = white
 		colorBorrow = black
 		$ColorRect.color = black
+	pass # Replace with function body.
+
+
+func _on_ClearButton_pressed():
+	#print("---")
+	#print(lineas)
+	for i in range(1, lineas.size()):
+		lineas[i].queue_free() #posicion se queda guardada null
+		#print(lineas)
+	for i in range(1, lineas.size()):
+		# Debido a que existe un objeto Elimited object
+		lineas.remove(1) # Elimina precisamente ese objeto de la lista
+		#print(lineas)
+		
+	lineas[0].clear_points()
+	indice = 0 
+	#print(lineas)
 	pass # Replace with function body.

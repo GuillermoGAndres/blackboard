@@ -14,35 +14,47 @@ __meta__ = {
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Button" type="Button" parent="."]
-margin_left = 615.158
-margin_top = 15.6365
-margin_right = 705.158
-margin_bottom = 35.6365
+margin_left = 655.0
+margin_top = 23.0
+margin_right = 766.0
+margin_bottom = 53.0
 text = "undo"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="CheckButton" type="CheckButton" parent="."]
-margin_left = 490.516
-margin_top = 7.85725
-margin_right = 566.516
-margin_bottom = 47.8573
+margin_left = 511.843
+margin_top = 16.8369
+margin_right = 636.843
+margin_bottom = 56.837
+text = "Borrow"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ChangeColorButton" type="Button" parent="."]
-margin_left = 821.409
-margin_top = 23.1634
-margin_right = 879.409
-margin_bottom = 43.1634
-text = "Change"
+margin_left = 791.694
+margin_top = 20.7551
+margin_right = 923.694
+margin_bottom = 54.7551
+text = "ChangeBackground"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ClearButton" type="Button" parent="."]
+margin_left = 42.0
+margin_top = 18.0
+margin_right = 127.0
+margin_bottom = 50.0
+text = "Clear"
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="toggled" from="CheckButton" to="." method="_on_CheckButton_toggled"]
 [connection signal="pressed" from="ChangeColorButton" to="." method="_on_ChangeColorButton_pressed"]
+[connection signal="pressed" from="ClearButton" to="." method="_on_ClearButton_pressed"]
